@@ -1,0 +1,26 @@
+<form method="POST" action="">
+  <input name="fac" type="number" placeholder="Число"/>
+  <input type="submit" value="Отправить"/>
+ </form>
+<ul>
+
+<?php
+$n= $_POST["fac"];
+
+function fact($y) 
+{
+    $return = 1;
+    for ($i=2; $i <= $y; $i++) {
+        $return = gmp_mul($return, $i);
+    }
+    return $return;
+}
+echo 'Вы ввели число = ' . $n . '<br/>';
+echo 'Факториал числа = ' . fact($n) . '<br/>';
+echo 'Количество 0 в факториале числа = ' . substr_count(gmp_strval(fact($n)),'0') . '<br/>';
+?><br/>
+<?php 
+$lst = array();
+$k = true;
+
+?>
