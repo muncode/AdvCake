@@ -1,0 +1,30 @@
+<table>
+    <tr>
+        <td>id</td><td>order_id</td><td>agency_id</td><td>name</td><td> restraunt</td><td>courier</td><td>delivery_time</td><td>poor_condition</td>
+    </tr>
+<?
+$connection2 = mysqli_connect('127.0.0.1','root','','delivery');
+
+$result2 = mysqli_query($connection2, "
+    SELECT *,`orders`.`id` as `oid` FROM `orders` LEFT JOIN `agency` on `orders`.`agency_id`=`agency`.`id`,(
+        SELECT max(`delivery_time`) as `max_del`, `max`.`max_poor`,`max`.`max_ag` FROM `orders`,(
+            SELECT max(`poor_condition`) as `max_poor`,`agency_id` as `max_ag` FROM `orders` group by `agency_id`) as `max`
+        WHERE (`max`.`max_poor`=`poor_condition`)and(`orders`.`agency_id`=`max`.`max_ag`) group by `agency_id`) as `maxx`
+    WHERE (`orders`.`agency_id`=`maxx`.`max_ag`)and(`orders`.`delivery_time`=`maxx`.`max_del`)
+    ");
+while($sql = mysqli_fetch_array($result2))
+    {
+        echo '<tr>
+        <td>' .$sql[oid]. '</td>
+        <td>' .$sql[order_id]. '</td>
+        <td>' .$sql[agency_id]. '</td>
+        <td>' .$sql[name]. '</td>
+        <td>' .$sql[restraunt]. '</td>
+        <td>' .$sql[courier]. '</td>
+        <td>' .$sql[delivery_time]. '</td>
+        <td>' .$sql[poor_condition]. '</td>
+        <td>' .$sql[max_delivery]. '</td>
+        </tr>
+        ';
+    }
+?>
