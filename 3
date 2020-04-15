@@ -1,0 +1,36 @@
+<?
+
+function mb_str_split($str, $length){
+    preg_match_all('#.{' . $length . '}#uis', $str, $out);
+    return $out[0];
+}
+
+function podpis($key,$str){
+    $max=array(); // Максимальная допустимая длина
+    for ($x=1; $x<=(iconv_strlen($str)/2); $x++){
+        $len=iconv_strlen($str)/$x; // Разбиваем на подстроки
+        $podstr=mb_str_split($str,$len); // Подстрока
+        $col=0; // Количество подстрок в строке
+        for ($y=0; $y<count($podstr);$y++){
+            if (substr_count($key,$podstr[$y])>=1){ // Если подстрока является частью строки
+                $col++;
+            }
+            else{
+                $col=0;
+                $y=count($podstr); // Выход из цикла
+            }
+        }
+        if ($col!=0){
+        array_push($max,$col); // Массив подстрок разного размера
+        }
+    }
+    if ($max){
+        return min($max);
+    }
+    else{
+        return 0;
+    }
+}
+echo podpis('achb3v5f', '3vac') . ' - Длина ключа (Количество подстрок в строке) <br/>';
+
+?>
