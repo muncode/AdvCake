@@ -1,0 +1,51 @@
+<form method="POST" action="">
+  <input name="date" type="date" placeholder="Дата"/>
+  <input type="submit" value="Отправить"/>
+ </form>
+<ul>
+
+<?php
+$date = $_POST["date"];
+echo $date .' - Вы выбрали дату<br/>';
+$connection = mysqli_connect('127.0.0.1','root','','test');
+$result = mysqli_query($connection, "SELECT * FROM `session` WHERE (`login_time`>'$date 00:00:00')and(`login_time`<'$date 23:59:59')");
+   
+    $al = mysqli_fetch_assoc($result);
+    $in = $al['login_time'];
+    $out = $al['logout_time'];
+    $i=1;
+    echo '<li>' . $i .' - id сессии </li>';
+    echo $in .' - ';
+    echo $out .' - конец сессии<br/>';
+    while($all = mysqli_fetch_assoc($result))
+        {
+            echo '<li>' . $all['id'] . ' - id сессии </li>';
+        if ($all['login_time']>=$in and $all['login_time']<$out ){ 
+        $in = $all['login_time'];
+        $i++;
+        } else {
+            if ($i>$max){
+                $max=$i;
+                $inmax = $in;
+                $outmax=$out;
+            }
+            $in = $all['login_time'];
+            $out = $all['logout_time'];
+            $i=1;
+        }
+        if ($i>$max){
+            $max=$i;
+            $inmax = $in;
+            $outmax=$out;}
+            echo $all['login_time'] .' - '; 
+            echo $all['logout_time'] .' - ';
+            echo $i .' - счётчик <br/>';
+        }
+        echo $max .' - максимальное количество сессий<br/>';
+        echo $inmax .' - ';
+        echo $outmax .'< - время максимальное число пользователейbr/>';
+        ?>
+        </ul>
+<?php
+mysqli_close($connection);
+?>
